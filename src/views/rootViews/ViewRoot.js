@@ -35,6 +35,7 @@ const ViewRoot = ({ location }) => {
                     <Scrollbars 
                         autoHeight 
                         autoHeightMax="calc(100vh - 100px)"
+                        autoHeightMin="calc(100vh - 100px)"
                     >
                         {routePage(location)}
                     </Scrollbars>
