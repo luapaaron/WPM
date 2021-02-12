@@ -49,6 +49,7 @@ export const actionUpdateUser = (result) => async (dispatch, getState) => {
                     "WPM": result.wpm,
                     "Errors": result.errorRes,
                     "Accuracy": result.accuracyRes,
+                    "CompletionRate": result.completionRate,
                     "Timestamp": Math.round((new Date()).getTime() / 1000)
                 }];
     

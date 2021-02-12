@@ -42,13 +42,14 @@ const AppHistory = ({ users }) => {
 
             {
                 (isEmpty(Data)) ? <span> No history record yet.</span> :
-                <Table col={4} >
+                <Table col={5} >
                     <Table.THead>
                         <Table.TR>
                             <Table.TH>Date</Table.TH>
                             <Table.TH>WPM</Table.TH>
                             <Table.TH>Errors</Table.TH>
                             <Table.TH>Accuracy</Table.TH>
+                            <Table.TH>Completion Rate</Table.TH>
                         </Table.TR>
                     </Table.THead>
                     <Table.TBody isStripped>
@@ -61,6 +62,7 @@ const AppHistory = ({ users }) => {
                                         <Table.TD>{record.WPM}</Table.TD>
                                         <Table.TD>{record.Errors}</Table.TD>
                                         <Table.TD>{record.Accuracy}</Table.TD>
+                                        <Table.TD>{record.CompletionRate}%</Table.TD>
                                     </Table.TR>
                                 )
                             })

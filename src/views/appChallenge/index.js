@@ -58,6 +58,8 @@ let numCharacterTyped = 0;
 let numTimeElapsed = 0;
 let accuracyRes = 100;
 let errorRes = 0;
+let totalErrors = 0;
+let numQuoteNo = 0;
 
 const AppChallenge = ({ quotesArray, fetchingQuotePending, actionUpdateUser }) => {
 
@@ -65,9 +67,6 @@ const AppChallenge = ({ quotesArray, fetchingQuotePending, actionUpdateUser }) =
     const quoteText = useRef(null);
 
     const [numTimeLeft, setNumTimeLeft] = useState(180);
-    const [numTotalErrors, setNumTotalErrors] = useState(0);
-    const [numQuoteNo, setQuoteNo] = useState(0);
-
     const [textTimer, setTextTimer] = useState(`${numTimeLeft}s`);
     const [textAccuracy, setTextAccuracy] = useState(0);
     const [textError, setTextError] = useState(0);
@@ -101,8 +100,8 @@ const AppChallenge = ({ quotesArray, fetchingQuotePending, actionUpdateUser }) =
     const resetValues = () => {
         timeRemaining = 180;
         setNumTimeLeft(180);
-        setNumTotalErrors(0);
-        setQuoteNo(0);
+        totalErrors = 0;
+        numQuoteNo = 0;
         numCharacterTyped = 0;
         numTimeElapsed = 0; 
         accuracyRes = 100;
@@ -135,7 +134,7 @@ const AppChallenge = ({ quotesArray, fetchingQuotePending, actionUpdateUser }) =
         })
 
         if (numQuoteNo < quotesArray.length - 1){
-            setQuoteNo(numQuoteNo + 1);
+            numQuoteNo += 1;
         }
         else {
             finishGame();
@@ -171,20 +170,18 @@ const AppChallenge = ({ quotesArray, fetchingQuotePending, actionUpdateUser }) =
                 currentErrors = currentErrors + 1;
             }
         });
-
-        let correctCharacters = (numCharacterTyped - (numTotalErrors + currentErrors));
+        let correctCharacters = (numCharacterTyped - (totalErrors + currentErrors));
         let accuracyVal = ((correctCharacters / numCharacterTyped) * 100);
-
-        setTextError(numTotalErrors + currentErrors);
+        
+        if(accuracyVal < 0) accuracyVal = 0;
+        setTextError(currentErrors);
         setTextAccuracy(Math.round(accuracyVal));
         
         accuracyRes = Math.round(accuracyVal);
-        errorRes = numTotalErrors + currentErrors;
+        errorRes = totalErrors + currentErrors;
+        totalErrors += currentErrors;
         if (currInput.length === currentQuote.length) {
             updateQuote();
-
-            setNumTotalErrors(numTotalErrors + currentErrors);
-
             inputArea.current.value = "";
         }
     }
@@ -205,7 +202,9 @@ const AppChallenge = ({ quotesArray, fetchingQuotePending, actionUpdateUser }) =
 
         setIsInGame(false);
 
-        actionUpdateUser({ wpm, errorRes, accuracyRes})
+        const completionRate = (numQuoteNo-1)/quotesArray.length*100;
+
+        actionUpdateUser({ wpm, errorRes, accuracyRes, completionRate})
     }
 
     useEffect(() => {
@@ -225,6 +224,10 @@ const AppChallenge = ({ quotesArray, fetchingQuotePending, actionUpdateUser }) =
                             <Card>
                                 <label>WPM</label>
                                 <span>{textWPM}</span>
+                            </Card>
+                            <Card>
+                                <label>Completion</label>
+                                <span>{(numQuoteNo-1)/quotesArray.length*100}%</span>
                             </Card>
                         </>
                     ) : null
