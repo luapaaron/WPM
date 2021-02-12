@@ -1,0 +1,1 @@
+export const WPM_TOKEN = 'WPM_TOKEN';
